@@ -11,8 +11,11 @@ __pycache__/
 
 # Jupyter notebook checkpoints and files
 .ipynb_checkpoints/
+notebooks/test.ipynb
 
 # Virtual environment
 env/
 venv/
 .venv/
+
+data/FIC.pkl

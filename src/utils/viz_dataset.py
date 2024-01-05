@@ -13,7 +13,7 @@ import pickle as pkl
 
 
 # load the dataset pickle
-with open('./FIC.pkl', 'rb') as fh:
+with open('../../data/FIC.pkl', 'rb') as fh:
     dataset = pkl.load(fh)
 
 # Extract all information

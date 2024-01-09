@@ -19,3 +19,5 @@ venv/
 .venv/
 
 data/
+
+/notebooks/test.ipynb

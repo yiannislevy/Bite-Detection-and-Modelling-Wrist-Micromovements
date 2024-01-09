@@ -1,6 +1,7 @@
 import numpy as np
 import json
 
+
 def find_common_timeframe(signals_session, mm_gt_session):
     start_time = max(signals_session[0, 0], mm_gt_session[0, 0])
     end_time = min(signals_session[-1, 0], mm_gt_session[-1, 1])
@@ -82,7 +83,6 @@ def process_windows_and_assign_labels(session, mm_gt_session):
             one_hot_label = one_hot_encode(label)
             labeled_windows.append((window, one_hot_label))
     return labeled_windows
-
 
 
 def process_single_session(signal_session, label_session):

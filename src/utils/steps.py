@@ -65,7 +65,7 @@ def assign_label_to_window(mid_timestamp, labels):
     return -1
 
 
-def one_hot_encode(label, num_classes=6):
+def one_hot_encode(label, num_classes=5):
     if 1 <= label <= num_classes:
         one_hot = np.zeros(num_classes)
         one_hot[label - 1] = 1

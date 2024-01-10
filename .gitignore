@@ -21,3 +21,5 @@ venv/
 data/
 
 /notebooks/test.ipynb
+
+models/

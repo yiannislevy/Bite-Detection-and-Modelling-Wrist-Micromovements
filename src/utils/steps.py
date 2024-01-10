@@ -1,5 +1,6 @@
 import numpy as np
 import json
+from collections import Counter
 
 
 def find_common_timeframe(signals_session, mm_gt_session):
@@ -73,7 +74,7 @@ def one_hot_encode(label, num_classes=5):
         return one_hot
     return np.zeros(num_classes)
 
-
+# Option 1 to get the middle timestamp label
 def process_windows_and_assign_labels(session, mm_gt_session):
     labeled_windows = []
     for window in session:
@@ -85,12 +86,49 @@ def process_windows_and_assign_labels(session, mm_gt_session):
     return labeled_windows
 
 
+# ----------------------------------------------------------------
+# Option 2 to get majority label
+def process_windows_assign_majority_label(session, mm_gt_session):
+    labeled_windows = []
+    for window in session:
+        window_labels = get_labels_for_window(window, mm_gt_session)
+        label = assign_label_to_window_majority(window_labels)
+        if label != -1 and label != 6:  # Discard windows with no dominant label or 'Other'
+            one_hot_label = one_hot_encode(label)
+            labeled_windows.append((window, one_hot_label))
+    return labeled_windows
+
+
+def get_labels_for_window(window, labels):
+    window_labels = []
+    for timestamp in window:
+        for start, end, label in labels:
+            if start <= timestamp[0] <= end:
+                window_labels.append(label)
+                break
+    return window_labels
+
+
+def assign_label_to_window_majority(window_labels, threshold=0.75):
+    if not window_labels:
+        return -1
+    label_count = Counter(window_labels)
+    most_common_label, count = label_count.most_common(1)[0]
+    if count / len(window_labels) >= threshold:
+        return int(most_common_label)
+    return -1
+# ----------------------------------------------------------------
+
+
 def process_single_session(signal_session, label_session):
     common_data, common_labels = find_common_timeframe(signal_session, label_session)
     windowed_data = sliding_window(common_data)
     adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
     standardized_windows = standardize_windows(windowed_data)
-    final_processed = process_windows_and_assign_labels(standardized_windows, adjusted_labels)
+    # option 1:
+    # final_processed = process_windows_and_assign_labels(windowed_data, adjusted_labels)
+    # option 2:
+    final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
 
     final_processed_no_timestamp = [(window[:, 1:], label) for window, label in final_processed]
 

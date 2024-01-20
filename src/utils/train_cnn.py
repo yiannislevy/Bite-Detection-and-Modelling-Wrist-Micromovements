@@ -10,7 +10,40 @@ import os
 import pickle
 
 
-def load_data(path):
+def load_data(test_subject, subjects_sessions):
+    training_data, testing_data, validation_data = [], [], []
+    training_labels, testing_labels, validation_labels = [], [], []
+
+    # Load training data (all subjects except the test and validation subjects)
+    for subject in subjects_sessions.keys():
+        if subject != test_subject:
+            # and subject != validation_subject:
+            subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel(95%)/subject_{subject}/data.pkl")
+            training_data.append(subject_data)
+            training_labels.append(subject_labels)
+
+    # Load testing data (only the test subject)
+    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/subject_{test_subject}/data.pkl")
+    testing_data.append(test_data)
+    testing_labels.append(test_labels)
+
+    # # Load validation data (only the validation subject)
+    # val_data, val_labels = load_subject_data(f"../data/ProcessedSubjects/subject_{validation_subject}/data.pkl")
+    # validation_data.append(val_data)
+    # validation_labels.append(val_labels)
+
+    # Combine all training, testing, and validation data and labels
+    training_data = np.concatenate(training_data, axis=0)
+    training_labels = np.concatenate(training_labels, axis=0)
+    testing_data = np.concatenate(testing_data, axis=0)
+    testing_labels = np.concatenate(testing_labels, axis=0)
+    # validation_data = np.concatenate(validation_data, axis=0)
+    # validation_labels = np.concatenate(validation_labels, axis=0)
+
+    return training_data, training_labels, testing_data, testing_labels
+
+
+def load_subject_data(path):
     data = pd.read_pickle(path)
     signal_data = np.array([item[0] for item in data])
     label_data = np.array([item[1] for item in data])
@@ -26,33 +59,28 @@ def build_model(input_shape):
     model.add(Flatten())
     model.add(Dropout(0.5))
     model.add(Dense(5, activation='softmax'))  # Assuming 5 classes for the output layer
-
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    optimizer = LegacyAdam(learning_rate=1e-3)
+    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=["accuracy"])
     return model
 
 
-# Load the data
-file_path = '../../data/LOSO.nosync/'  # Replace with your file path
-loso_results = []
+with open("../data/processed.nosync/subject_to_indices.json", "r") as f:
+    subject_to_indices = json.load(f)
 
-# for subject in range(1, 13):
-print(f"Training on all but subject {1}")
+subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
 
-# Load training and testing data
-train_data_path = os.path.join(file_path, f'all_but_{1}', 'train_data.pkl')
-test_data_path = os.path.join(file_path, f'all_but_{1}', 'test_data.pkl')
 
-X_train, y_train = load_data(train_data_path)
-X_test, y_test = load_data(test_data_path)
+results = []
+accuracy = []
+loss = []
 
-model = build_model(input_shape=X_train.shape[1:])
-
-model.fit(X_train, y_train, epochs=32, batch_size=32)
-
-y_pred = model.predict(X_test)
-y_pred_classes = np.argmax(y_pred, axis=1)
-y_test_classes = np.argmax(y_test, axis=1)
-
-# Calculate accuracy
-accuracy = accuracy_score(y_test_classes, y_pred_classes)
-loso_results.append(accuracy)
+for subject_id in subject_to_indices.keys():
+    # Load the data
+    print(f"Training without {subject_id}")
+    model_x = build_model(input_shape=(20, 6))
+    train_data, train_labels, test_data, test_labels = load_data(subject_id, subject_to_indices)
+    history = model_x.fit(train_data, train_labels, epochs=32, batch_size=64)
+    results.append(model_x.evaluate(test_data, test_labels))
+    accuracy.append(history.history['accuracy'])
+    loss.append(history.history['loss'])
+    model_x.save(f"../models/full_loso/model_{subject_id}.keras")

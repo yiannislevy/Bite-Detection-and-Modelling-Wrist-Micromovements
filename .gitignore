@@ -23,8 +23,9 @@ data/processed.nosync
 data/ProcessedSubjects
 data/bite_gt.pkl
 data/mm_gt.pkl
-data/predictions_1.pkl
+data/cnn_predictions/predictions_1.pkl
 data/FIC.pkl
+data/cnn_predictions
 
 /notebooks/test.ipynb
 

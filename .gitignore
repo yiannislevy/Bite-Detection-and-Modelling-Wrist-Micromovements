@@ -18,7 +18,13 @@ env/
 venv/
 .venv/
 
-data/
+data/lstm_training_data
+data/processed.nosync
+data/ProcessedSubjects
+data/bite_gt.pkl
+data/mm_gt.pkl
+data/predictions_1.pkl
+data/FIC.pkl
 
 /notebooks/test.ipynb
 

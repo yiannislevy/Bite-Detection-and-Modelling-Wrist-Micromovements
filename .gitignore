@@ -22,11 +22,15 @@ data/lstm_training_data
 data/processed.nosync
 data/ProcessedSubjects
 data/bite_gt.pkl
+data/bite_gt_1.pkl
 data/mm_gt.pkl
 data/cnn_predictions/predictions_1.pkl
 data/FIC.pkl
 data/cnn_predictions
 
 /notebooks/test.ipynb
+/notebooks/test2.ipynb
 
 models/
+
+data/predictions

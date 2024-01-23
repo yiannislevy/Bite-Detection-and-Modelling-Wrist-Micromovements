@@ -59,7 +59,8 @@ def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10)
     - numpy.array: An array of shape Kx6, where the last column represents the timestamps.
     """
     # Number of samples in the prediction array
-    num_samples = predictions.shape[0]
+    num_samples = len(predictions)
+    predictions = np.vstack(predictions)
 
     # Generate timestamps
     timestamps = np.arange(start_time, start_time + num_samples * sample_step_ms / 1000, sample_step_ms / 1000)
@@ -81,7 +82,7 @@ def extract_data_for_bite_window(start_time, end_time, predictions, window_lengt
     bite_data = predictions[start_index:end_index]
 
     # Calculating the total number of samples required for a full 8.75-second window
-    required_samples = int(window_length / step)
+    required_samples = int(window_length / (step / 1000))
 
     # Padding with zeros if the bite duration is less than 8.75 seconds
     if bite_data.shape[0] < required_samples:
@@ -92,12 +93,12 @@ def extract_data_for_bite_window(start_time, end_time, predictions, window_lengt
     return bite_data
 
 
-def create_positive_example_bites(predictions, labels, window_length=8.75, step=0.01):
+def create_positive_example_bites(predictions, labels, start_time, window_length=8.75, step_in_ms=10):
     bite_duration_data = []
-
+    predictions = append_timestamps_to_predictions(predictions, start_time, step_in_ms)
     for start_time, end_time in labels:
         # Extracting data for the bite window and padding with zeros
-        bite_window_data = extract_data_for_bite_window(start_time, end_time, predictions , window_length, step)
+        bite_window_data = extract_data_for_bite_window(start_time, end_time, predictions, window_length, step_in_ms)
         bite_duration_data.append((bite_window_data, 1))
 
     return bite_duration_data

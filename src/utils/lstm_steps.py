@@ -16,36 +16,6 @@ def load_start_time(start_time_json_path, subject):
     return start_times[subject]
 
 
-# def create_windows(predictions, start_time, window_length=35, step_size=0.01):
-#     """
-#     Create 35-sample windows from the predictions.
-#
-#     Parameters:
-#     - predictions: A list of numpy arrays, each representing predictions for a 20ms window.
-#     - window_length: The length of each window (default is 35).
-#     - step_size: The time step size in seconds (default is 0.01s for 10ms).
-#     - start_time: The start time of the first prediction window.
-#
-#     Returns:
-#     - windows_array: An array of 35-sample windows.
-#     - timestamps: The timestamps for each window.
-#     """
-#     # Concatenate predictions to form a continuous sequence
-#     concatenated_predictions = np.vstack(predictions)
-#
-#     # Calculate timestamps for each prediction
-#     timestamps = np.arange(concatenated_predictions.shape[0]) * step_size + start_time
-#
-#     # Generate windows
-#     windows = []
-#     for start_idx in range(len(concatenated_predictions) - window_length + 1):
-#         window = concatenated_predictions[start_idx:start_idx + window_length, :]
-#         windows.append(window)
-#
-#     windows_array = np.array(windows)
-#     return windows_array, timestamps
-
-
 def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10):
     """
     Appends timestamps to each row in the prediction array.
@@ -60,7 +30,6 @@ def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10)
     """
     # Number of samples in the prediction array
     num_samples = len(predictions)
-    predictions = np.vstack(predictions)
 
     # Generate timestamps
     timestamps = np.arange(start_time, start_time + num_samples * sample_step_ms / 1000, sample_step_ms / 1000)

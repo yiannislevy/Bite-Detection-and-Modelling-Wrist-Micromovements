@@ -18,12 +18,12 @@ def load_data(test_subject, subjects_sessions):
     for subject in subjects_sessions.keys():
         if subject != test_subject:
             # and subject != validation_subject:
-            subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel(95%)/subject_{subject}/data.pkl")
+            subject_data, subject_labels = load_subject_data(f"../../data/ProcessedSubjects/MajorityLabel/subject_{subject}/data.pkl")
             training_data.append(subject_data)
             training_labels.append(subject_labels)
 
     # Load testing data (only the test subject)
-    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/subject_{test_subject}/data.pkl")
+    test_data, test_labels = load_subject_data(f"../../data/ProcessedSubjects/subject_{test_subject}/data.pkl")
     testing_data.append(test_data)
     testing_labels.append(test_labels)
 
@@ -63,8 +63,35 @@ def build_model(input_shape):
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=["accuracy"])
     return model
 
+def train_model(subj_id):
+    print(f"Training without {subj_id}")
+    model_x = build_model(input_shape=(20, 6))
+    train_data, train_labels, test_data, test_labels = load_data(subj_id, subject_to_indices)
+    history = model_x.fit(train_data, train_labels, epochs=32, batch_size=64)
+    results.append(model_x.evaluate(test_data, test_labels))
+    accuracy.append(history.history['accuracy'])
+    loss.append(history.history['loss'])
+    model_x.save(f"../models/full_loso/model_{subj_id}.keras")
+    return
 
-with open("../data/processed.nosync/subject_to_indices.json", "r") as f:
+def save_predictions(subj_id, subject_to_indices):
+    model = keras.models.load_model(f"../../models/full_loso/majority_label/model_{subj_id}.keras", compile=False)
+    optimizer = LegacyAdam(learning_rate=1e-3)
+    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=["accuracy"])
+    _, _, test_data, _ = load_split_data(test_subject_id, subject_to_indices)
+    predictions = []
+    for window in test_data:
+        window_reshaped = window.reshape(1, 20, 6)
+        prediction = model.predict(window_reshaped)
+        predictions.append(prediction)
+    predictions = np.array(predictions)
+    predictions = predictions.squeeze(axis=1)
+    predictions = np.vstack(predictions)
+    save_data(predictions, "../../data/cnn_predictions/", f"predictions_{subj_id}")
+    return
+
+
+with open("../../data/processed.nosync/subject_to_indices.json", "r") as f:
     subject_to_indices = json.load(f)
 
 subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
@@ -75,12 +102,5 @@ accuracy = []
 loss = []
 
 for subject_id in subject_to_indices.keys():
-    # Load the data
-    print(f"Training without {subject_id}")
-    model_x = build_model(input_shape=(20, 6))
-    train_data, train_labels, test_data, test_labels = load_data(subject_id, subject_to_indices)
-    history = model_x.fit(train_data, train_labels, epochs=32, batch_size=64)
-    results.append(model_x.evaluate(test_data, test_labels))
-    accuracy.append(history.history['accuracy'])
-    loss.append(history.history['loss'])
-    model_x.save(f"../models/full_loso/model_{subject_id}.keras")
+    train_model(subject_id)
+    save_predictions(subject_id, subject_to_indices)

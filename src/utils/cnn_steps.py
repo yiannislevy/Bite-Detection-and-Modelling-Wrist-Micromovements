@@ -41,7 +41,7 @@ def find_common_timeframe_after_windowing(windows, mm_gt_session):
 
 
 def standardize_windows(data):
-    with open("../data/processed.nosync/mean_std_values.json", 'r') as f:
+    with open("../data/dataset-info-json/mean_std_values.json", 'r') as f:
         mean_std = json.load(f)
 
     means = np.array(mean_std['means'])
@@ -73,6 +73,7 @@ def one_hot_encode(label, num_classes=5):
         one_hot[label - 1] = 1
         return one_hot
     return np.zeros(num_classes)
+
 
 # Option 1 to get the middle timestamp label
 def process_windows_and_assign_labels(session, mm_gt_session):
@@ -137,7 +138,11 @@ def process_single_session(signal_session, label_session):
 
 def process_all_sessions(signals, labels):
     all_processed_data = []
+    i = 1
     for signal_session, label_session in zip(signals, labels):
+        print(f"Session: {i}")
+        i += 1
         session_data = process_single_session(signal_session, label_session)
+        print(len(session_data))
         all_processed_data.extend(session_data)
     return all_processed_data

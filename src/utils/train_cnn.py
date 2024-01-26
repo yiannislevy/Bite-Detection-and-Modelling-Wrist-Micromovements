@@ -2,12 +2,18 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import keras
+from keras.optimizers.legacy import Adam as LegacyAdam
 import numpy as np
 import pickle as pkl
 from src.utils.data_transform import *
+from src.utils.data_io import save_data
+from src.utils.utilities import append_timestamps_to_predictions
+from src.utils.preprocessing import load_split_data
 import pandas as pd
 import os
 import pickle
+import json
 
 
 def load_data(test_subject, subjects_sessions):
@@ -63,8 +69,12 @@ def build_model(input_shape):
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=["accuracy"])
     return model
 
-def train_model(subj_id):
+
+def train_model(subj_id, subject_to_indices):
     print(f"Training without {subj_id}")
+    results = []
+    accuracy = []
+    loss = []
     model_x = build_model(input_shape=(20, 6))
     train_data, train_labels, test_data, test_labels = load_data(subj_id, subject_to_indices)
     history = model_x.fit(train_data, train_labels, epochs=32, batch_size=64)
@@ -72,35 +82,54 @@ def train_model(subj_id):
     accuracy.append(history.history['accuracy'])
     loss.append(history.history['loss'])
     model_x.save(f"../models/full_loso/model_{subj_id}.keras")
+
+    save_data(results, "../../models/full_loso/majority_label/training_info/", f"results_{subj_id}")
+    save_data(accuracy, "../../models/full_loso/majority_label/training_info/", f"accuracy_{subj_id}")
+    save_data(loss, "../../models/full_loso/majority_label/training_info/", f"loss_{subj_id}")
+
     return
 
-def save_predictions(subj_id, subject_to_indices):
+
+def save_predictions(subj_id, subject_to_indices, start_time_json_path):
+    start_time = load_start_time(start_time_json_path, subj_id)
     model = keras.models.load_model(f"../../models/full_loso/majority_label/model_{subj_id}.keras", compile=False)
     optimizer = LegacyAdam(learning_rate=1e-3)
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=["accuracy"])
-    _, _, test_data, _ = load_split_data(test_subject_id, subject_to_indices)
+    _, _, test_data, _ = load_split_data(subj_id, subject_to_indices)
     predictions = []
     for window in test_data:
         window_reshaped = window.reshape(1, 20, 6)
-        prediction = model.predict(window_reshaped)
+        prediction = model.predict(window_reshaped, verbose=False)
         predictions.append(prediction)
     predictions = np.array(predictions)
     predictions = predictions.squeeze(axis=1)
     predictions = np.vstack(predictions)
-    save_data(predictions, "../../data/cnn_predictions/", f"predictions_{subj_id}")
+    predictions = append_timestamps_to_predictions(predictions, start_time)
+    save_data(predictions, "../../data/cnn_predictions/timestamped", f"predictions_{subj_id}")
     return
 
 
-with open("../../data/processed.nosync/subject_to_indices.json", "r") as f:
-    subject_to_indices = json.load(f)
+def load_start_time(start_time_json_path, subject):
+    """ Load the start time for the given subject from the JSON file. """
 
-subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
+    with open(start_time_json_path, 'r') as file:
+        start_times = json.load(file)
+    return start_times[f"{subject}"]
 
 
-results = []
-accuracy = []
-loss = []
+def main():
+    with open("../../data/dataset-info-json/subject_to_indices.json", "r") as f:
+        subject_to_indices = json.load(f)
 
-for subject_id in subject_to_indices.keys():
-    train_model(subject_id)
-    save_predictions(subject_id, subject_to_indices)
+    subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
+
+    start_time_json_path = '../../data/dataset-info-json/signal_start_times.json'
+
+    for subject_id in subject_to_indices.keys():
+        print(f"In {subject_id}")
+        # train_model(subject_id, subject_to_indices)
+        if subject_id <= 4:
+            continue
+        save_predictions(subject_id, subject_to_indices, start_time_json_path)
+        print("here")
+    return

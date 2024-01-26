@@ -29,6 +29,7 @@ data/FIC.pkl
 data/cnn_predictions
 
 /notebooks/test.ipynb
+/notebooks/test2.ipynb
 
 models/
 

@@ -1,8 +1,17 @@
 import numpy as np
 import pickle
+import json
 
 
-def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10):
+def load_start_time(start_time_json_path, session):
+    """ Load the start time for the given subject from the JSON file. """
+
+    with open(start_time_json_path, 'r') as file:
+        start_times = json.load(file)
+    return start_times[f"{session}"][0]
+
+
+def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=100):
     """
     Appends timestamps to each row in the prediction array.
 

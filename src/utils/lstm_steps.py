@@ -16,28 +16,6 @@ def load_start_time(start_time_json_path, subject):
     return start_times[subject]
 
 
-def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10):
-    """
-    Appends timestamps to each row in the prediction array.
-
-    Args:
-    - predictions (numpy.array): A numpy array of shape Kx5 containing prediction data.
-    - start_time (float): The start time in seconds for the first prediction.
-    - sample_step_ms (float): The time step in milliseconds between each prediction sample. Default is 10ms.
-
-    Returns:
-    - numpy.array: An array of shape Kx6, where the last column represents the timestamps.
-    """
-    # Number of samples in the prediction array
-    num_samples = len(predictions)
-
-    # Generate timestamps
-    timestamps = np.arange(start_time, start_time + num_samples * sample_step_ms / 1000, sample_step_ms / 1000)
-
-    # Append timestamps as a new column to the predictions
-    return np.column_stack((predictions, timestamps))
-
-
 def find_index_for_timestamp(timestamp, predictions):
     return np.searchsorted(predictions[:, 5], timestamp, side='left')
 
@@ -62,9 +40,8 @@ def extract_data_for_bite_window(start_time, end_time, predictions, window_lengt
     return bite_data
 
 
-def create_positive_example_bites(predictions, labels, start_time, window_length=8.75, step_in_ms=10):
+def create_positive_example_bites(predictions, labels, window_length=8.75, step_in_ms=10):
     bite_duration_data = []
-    predictions = append_timestamps_to_predictions(predictions, start_time, step_in_ms)
     for start_time, end_time in labels:
         # Extracting data for the bite window and padding with zeros
         bite_window_data = extract_data_for_bite_window(start_time, end_time, predictions, window_length, step_in_ms)

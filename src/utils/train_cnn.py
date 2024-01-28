@@ -90,7 +90,7 @@ def train_model(subj_id, subject_to_indices):
     return
 
 
-def save_predictions_timestamped(subj_id, subject_to_indices, start_time_json_path):
+def predict_and_save_timestamped(subj_id, subject_to_indices, start_time_json_path):
     start_time = load_start_time(start_time_json_path, subj_id)
     model = keras.models.load_model(f"../../models/full_loso/majority_label/model_{subj_id}.keras", compile=False)
     optimizer = LegacyAdam(learning_rate=1e-3)
@@ -108,14 +108,6 @@ def save_predictions_timestamped(subj_id, subject_to_indices, start_time_json_pa
     return
 
 
-def load_start_time(start_time_json_path, subject):
-    """ Load the start time for the given subject from the JSON file. """
-
-    with open(start_time_json_path, 'r') as file:
-        start_times = json.load(file)
-    return start_times[f"{subject}"]
-
-
 def main():
     with open("../../data/dataset-info-json/subject_to_indices.json", "r") as f:
         subject_to_indices = json.load(f)
@@ -126,5 +118,5 @@ def main():
 
     for subject_id in subject_to_indices.keys():
         # train_model(subject_id, subject_to_indices)
-        save_predictions_timestamped(subject_id, subject_to_indices, start_time_json_path)
+        predict_and_save_timestamped(subject_id, subject_to_indices, start_time_json_path)
     return

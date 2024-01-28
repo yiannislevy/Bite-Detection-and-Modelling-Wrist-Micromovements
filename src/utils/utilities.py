@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 
+
 def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10):
     """
     Appends timestamps to each row in the prediction array.
@@ -15,7 +16,7 @@ def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=10)
     """
     # Number of samples in the prediction array
     num_samples = len(predictions)
-
+    predictions = np.vstack(predictions)
     # Generate timestamps
     timestamps = np.arange(start_time, start_time + num_samples * sample_step_ms / 1000, sample_step_ms / 1000)
 

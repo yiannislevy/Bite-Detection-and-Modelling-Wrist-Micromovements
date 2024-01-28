@@ -24,7 +24,6 @@ data/ProcessedSubjects
 data/bite_gt.pkl
 data/bite_gt_1.pkl
 data/mm_gt.pkl
-data/cnn_predictions/predictions_1.pkl
 data/FIC.pkl
 data/cnn_predictions
 

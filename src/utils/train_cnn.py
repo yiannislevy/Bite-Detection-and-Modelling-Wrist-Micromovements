@@ -90,7 +90,7 @@ def train_model(subj_id, subject_to_indices):
     return
 
 
-def save_predictions(subj_id, subject_to_indices, start_time_json_path):
+def save_predictions_timestamped(subj_id, subject_to_indices, start_time_json_path):
     start_time = load_start_time(start_time_json_path, subj_id)
     model = keras.models.load_model(f"../../models/full_loso/majority_label/model_{subj_id}.keras", compile=False)
     optimizer = LegacyAdam(learning_rate=1e-3)
@@ -103,9 +103,8 @@ def save_predictions(subj_id, subject_to_indices, start_time_json_path):
         predictions.append(prediction)
     predictions = np.array(predictions)
     predictions = predictions.squeeze(axis=1)
-    predictions = np.vstack(predictions)
     predictions = append_timestamps_to_predictions(predictions, start_time)
-    save_data(predictions, "../../data/cnn_predictions/timestamped", f"predictions_{subj_id}")
+    save_data(predictions, "../../data/cnn_predictions/non-majority/timestamped", f"predictions_{subj_id}")
     return
 
 
@@ -126,10 +125,6 @@ def main():
     start_time_json_path = '../../data/dataset-info-json/signal_start_times.json'
 
     for subject_id in subject_to_indices.keys():
-        print(f"In {subject_id}")
         # train_model(subject_id, subject_to_indices)
-        if subject_id <= 4:
-            continue
-        save_predictions(subject_id, subject_to_indices, start_time_json_path)
-        print("here")
+        save_predictions_timestamped(subject_id, subject_to_indices, start_time_json_path)
     return

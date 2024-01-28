@@ -43,7 +43,7 @@ def load_split_data(test_subject, subject_to_indices):
 
     # Load testing data (only the test subject)
     # test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subject_{test_subject}/data.pkl")
-    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/Standardized/subject_{subject}/data.pkl") #TODO re-eval
+    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/Standardized/subject_{test_subject}/data.pkl")
     testing_data.append(test_data)
     testing_labels.append(test_labels)
 

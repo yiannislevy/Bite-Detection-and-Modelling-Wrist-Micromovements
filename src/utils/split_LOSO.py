@@ -5,8 +5,8 @@ import pickle as pkl
 with open ("../../data/FIC.pkl", "rb") as f:
     FIC = pkl.load(f)
 
-# Opened the processed dataset
-with open ("../../data/processed.nosync/all_final/all_final.pkl", "rb") as f:
+# Open the processed dataset
+with open ("../../data/old_cnn_processed.nosync/all_final/all_final.pkl", "rb") as f:
     dataset = pkl.load(f)
 
 subject_ids = FIC["subject_id"]
@@ -16,7 +16,7 @@ for i, subject_id in enumerate(subject_ids):
 
 for subject in set(subject_ids):
     # Define directory name
-    directory = f"../../data/LOSO/all_but_{subject}"
+    directory = f"../../data/LOSO/all_but_{subject}" # TODO: modify path
     os.makedirs(directory, exist_ok=True)
 
     # Get training and testing indices

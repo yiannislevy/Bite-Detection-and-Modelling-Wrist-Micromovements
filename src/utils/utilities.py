@@ -33,7 +33,7 @@ def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=100
     return np.column_stack((predictions, timestamps))
 
 
-def split_predictions_to_sessions(predictions_path, subject_to_indices, session_length):
+def split_predictions_to_sessions_for_all(predictions_path, subject_to_indices, session_length):
     pred_in_ses = []
     for subject, sessions in subject_to_indices.items():
         with open(predictions_path + f"/prediction_{subject}.pkl", "rb") as f:
@@ -45,3 +45,14 @@ def split_predictions_to_sessions(predictions_path, subject_to_indices, session_
             temp += ses_len
             pred_in_ses.append(x_pred)
     return pred_in_ses
+
+
+def split_predictions_to_sessions(predictions, sessions, start_times_and_lengths):
+    sessioned_predictions = {}
+    temp = 0
+    for session_id in sessions:
+        session_length = start_times_and_lengths[str(session_id)][1]
+        session_predictions = predictions[temp:temp + session_length]
+        temp += session_length
+        sessioned_predictions[session_id] = session_predictions
+    return sessioned_predictions

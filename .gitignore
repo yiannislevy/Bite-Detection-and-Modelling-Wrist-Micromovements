@@ -19,7 +19,7 @@ venv/
 .venv/
 
 data/lstm_training_data
-data/processed.nosync
+data/old_cnn_processed.nosync
 data/ProcessedSubjects
 data/bite_gt.pkl
 data/bite_gt_1.pkl

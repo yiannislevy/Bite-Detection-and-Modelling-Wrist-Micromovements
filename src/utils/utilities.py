@@ -3,7 +3,7 @@ import pickle
 import json
 
 
-def load_start_time(start_time_json_path, session):
+def load_start_time(start_time_json_path, session): # TODO: move to data_io
     """ Load the start time for the given subject from the JSON file. """
 
     with open(start_time_json_path, 'r') as file:
@@ -11,23 +11,25 @@ def load_start_time(start_time_json_path, session):
     return start_times[f"{session}"][0]
 
 
-def append_timestamps_to_predictions(predictions, start_time, sample_step_ms=100):
+def append_timestamps_to_predictions(predictions, session_id):
     """
-    Appends timestamps to each row in the prediction array.
+    Appends timestamps to each row in the prediction array from a provided file.
 
     Args:
     - predictions (numpy.array): A numpy array of shape Kx5 containing prediction data.
-    - start_time (float): The start time in seconds for the first prediction.
-    - sample_step_ms (float): The time step in milliseconds between each prediction sample. Default is 10ms.
+    - timestamps_file_path (str): Path to the file containing timestamps for each prediction.
 
     Returns:
     - numpy.array: An array of shape Kx6, where the last column represents the timestamps.
     """
-    # Number of samples in the prediction array
-    num_samples = len(predictions)
-    predictions = np.vstack(predictions)
-    # Generate timestamps
-    timestamps = np.arange(start_time, start_time + num_samples * sample_step_ms / 1000, sample_step_ms / 1000)
+    timestamps_file_path = f"../data/ProcessedSubjects/MajorityLabel/sessions/timestamps/timestamps_session_{session_id}.pkl"
+    # Load timestamps from the file
+    with open(timestamps_file_path, "rb") as file:
+        timestamps = pickle.load(file)
+
+    # Check if the number of timestamps matches the number of predictions
+    if len(timestamps) != len(predictions):
+        raise ValueError("The number of timestamps does not match the number of predictions.")
 
     # Append timestamps as a new column to the predictions
     return np.column_stack((predictions, timestamps))

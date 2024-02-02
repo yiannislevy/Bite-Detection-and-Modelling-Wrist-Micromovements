@@ -1,6 +1,49 @@
 import numpy as np
 import json
 from collections import Counter
+from scipy.signal import firwin, lfilter, medfilt
+
+
+def remove_gravity(data, sample_rate=100, cutoff_hz=1):
+    """
+    Apply a custom high-pass filter to the accelerometer data in a NumPy array.
+
+    Args:
+        data (numpy.ndarray): Array containing sensor data with shape (N, 7),
+                              where columns are [timestamp, acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z].
+        sample_rate (int): Sample rate of the sensor data.
+        cutoff_hz (int): Cutoff frequency for the high-pass filter.
+
+    Returns:
+        numpy.ndarray: Array with the filtered accelerometer data, preserving the original format.
+    """
+    num_taps = sample_rate * 5 + 1  # Number of filter taps
+    hp_filter = firwin(num_taps, cutoff_hz / (sample_rate / 2), pass_zero=False)
+
+    # Apply the filter to accelerometer data (columns 1 to 3)
+    for i in range(1, 4):
+        data[:, i] = lfilter(hp_filter, 1.0, data[:, i])
+
+    return data
+
+
+def median_filter(data, filter_order=5):
+    """
+    Apply a median filter to the accelerometer and gyroscope sensor data in a NumPy array.
+
+    Args:
+        data (numpy.ndarray): Array containing sensor data with shape (N, 7),
+                              where columns are [timestamp, acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z].
+        filter_order (int): The order of the median filter (kernel size).
+
+    Returns:
+        numpy.ndarray: Array with the filtered sensor data, preserving the original format.
+    """
+    # Apply median filter to accelerometer data (columns 1 to 3) and gyroscope data (columns 4 to 6)
+    for i in range(1, 7):  # Skip the timestamp column
+        data[:, i] = medfilt(data[:, i], kernel_size=filter_order)
+
+    return data
 
 
 def find_common_timeframe(signals_session, mm_gt_session):
@@ -41,7 +84,7 @@ def find_common_timeframe_after_windowing(windows, mm_gt_session):
 
 
 def standardize_windows(data):
-    with open("../data/dataset-info-json/mean_std_values.json", 'r') as f:
+    with open("../../data/dataset-info-json/mean_std_values.json", 'r') as f:
         mean_std = json.load(f)
 
     means = np.array(mean_std['means'])
@@ -122,7 +165,9 @@ def assign_label_to_window_majority(window_labels, threshold=0.75):
 
 
 def process_single_session(signal_session, label_session):
-    common_data, common_labels = find_common_timeframe(signal_session, label_session)
+    removed_gravity_data = remove_gravity(signal_session)
+    filtered_data = median_filter(removed_gravity_data)
+    common_data, common_labels = find_common_timeframe(filtered_data, label_session)
     windowed_data = sliding_window(common_data)
     adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
     standardized_windows = standardize_windows(windowed_data)

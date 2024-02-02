@@ -36,14 +36,14 @@ def load_split_data(test_subject, subject_to_indices):
     for subject in subject_to_indices.keys():
         if subject != test_subject :
             # and subject != validation_subject:
-            subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subject_{subject}/data.pkl")
+            subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subjects/subject_{subject}/data.pkl")
             # subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/Standardized/subject_{subject}/data.pkl") #TODO re-eval
             training_data.append(subject_data)
             training_labels.append(subject_labels)
 
     # Load testing data (only the test subject)
-    # test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subject_{test_subject}/data.pkl")
-    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/Standardized/subject_{test_subject}/data.pkl")
+    test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subjects/subject_{test_subject}/data.pkl")
+    # test_data, test_labels = load_subject_data(f"../data/ProcessedSubjects/Standardized/subject_{test_subject}/data.pkl")
     testing_data.append(test_data)
     testing_labels.append(test_labels)
 

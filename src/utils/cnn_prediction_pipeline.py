@@ -29,17 +29,18 @@ from keras.optimizers.legacy import Adam as LegacyAdam
 from src.utils.preprocessing import load_split_data
 from src.utils.data_io import save_data
 from src.utils.utilities import append_timestamps_to_predictions, split_predictions_to_sessions
-
+# TODO FIX PATH ISSUE!
+# TODO STREAMLINE EVERYTHING
 # Paths
-path_to_models = "../../models/full_loso/majority_label/"
-path_to_save = "../../data/cnn_predictions/non-majority/timestamped/in_sessions/"
+path_to_models = "../models/full_loso/majority_label/"
+path_to_save = "../data/cnn_predictions/majority/timestamped/in_sessions/"
 
 # Load subject to indices and session start times
-with open("../../data/dataset-info-json/subject_to_indices.json", "r") as f:
+with open("../data/dataset-info-json/subject_to_indices.json", "r") as f:
     subject_to_indices = json.load(f)
 subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
 
-with open("../../data/dataset-info-json/signal_start_times.json", "r") as f:
+with open("../data/dataset-info-json/signal_start_times-MAJORITY-LABELS.json", "r") as f:
     session_start_time_and_length = json.load(f)
 
 
@@ -67,13 +68,13 @@ def save_predictions():
         predictions = np.array(predictions)
         predictions = predictions.squeeze(axis=1)
 
-        # Split predictions into sessions and append timestamps TODO reformat the utilities script to work with below args
+        # Split predictions into sessions and append timestamps
         sessioned_predictions = split_predictions_to_sessions(predictions, subject_to_indices[test_subject_id], session_start_time_and_length)
 
         # Save predictions
         for session_id, prediction in sessioned_predictions.items():
-            timestamped_predictions = append_timestamps_to_predictions(prediction, session_start_time_and_length[str(session_id)][0])
-            save_data(timestamped_predictions, path_to_save, f"prediction_{test_subject_id}_{session_id}")
+            timestamped_predictions = append_timestamps_to_predictions(prediction, session_id)
+            save_data(timestamped_predictions, path_to_save, f"prediction_{session_id}")
 
 
 # Run the function

@@ -131,9 +131,9 @@ def process_single_session(signal_session, label_session):
     # option 2:
     final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
 
-    final_processed_no_timestamp = [(window[:, 1:], label) for window, label in final_processed]
+    # final_processed_no_timestamp = [(window[:, 1:], label) for window, label in final_processed]
 
-    return final_processed_no_timestamp
+    return final_processed
 
 
 def process_all_sessions(signals, labels):

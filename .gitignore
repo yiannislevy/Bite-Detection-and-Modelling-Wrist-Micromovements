@@ -26,10 +26,12 @@ data/bite_gt_1.pkl
 data/mm_gt.pkl
 data/FIC.pkl
 data/cnn_predictions
+data/predictions
+data/new_test
 
 /notebooks/test.ipynb
 /notebooks/test2.ipynb
+/notebooks/debug.ipynb
 
 models/
 
-data/predictions

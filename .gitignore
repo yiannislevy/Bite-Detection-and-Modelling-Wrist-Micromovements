@@ -28,6 +28,7 @@ data/FIC.pkl
 data/cnn_predictions
 data/predictions
 data/new_test
+data/all_sessions.pkl
 
 /notebooks/test.ipynb
 /notebooks/test2.ipynb

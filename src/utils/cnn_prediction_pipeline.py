@@ -32,8 +32,8 @@ from src.utils.utilities import append_timestamps_to_predictions, split_predicti
 # TODO FIX PATH ISSUE!
 # TODO STREAMLINE EVERYTHING
 # Paths
-path_to_models = "../models/full_loso/majority_label/"
-path_to_save = "../data/cnn_predictions/majority/timestamped/in_sessions/"
+path_to_models = "../models/full_loso/majority_label/processed/std_3/"
+path_to_save = "../data/cnn_predictions/majority/timestamped/in_sessions/std_3"
 
 # Load subject to indices and session start times
 with open("../data/dataset-info-json/subject_to_indices.json", "r") as f:

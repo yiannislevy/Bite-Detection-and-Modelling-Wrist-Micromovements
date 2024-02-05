@@ -4,11 +4,12 @@ import pandas as pd
 
 
 def calculate_mean_std(data):
-    means = np.mean(data, axis=0)
-    std_devs = np.std(data, axis=0)
+    means = np.mean(data[:, 1:], axis=0)
+    std_devs = np.std(data[:, 1:], axis=0)
 
     mean_std = {'means': means.tolist(), 'std_devs': std_devs.tolist()}
-    with open('../data/processed/mean_std_values.json', 'w') as f:
+    path_to_save = "../data/dataset-info-json"
+    with open(f'{path_to_save}/mean_std_values_3.json', 'w') as f:
         json.dump(mean_std, f)
 
     return mean_std

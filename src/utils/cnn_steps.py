@@ -84,7 +84,7 @@ def find_common_timeframe_after_windowing(windows, mm_gt_session):
 
 
 def standardize_windows(data):
-    with open("../../data/dataset-info-json/mean_std_values.json", 'r') as f:
+    with open("../data/dataset-info-json/mean_std_values_3.json", 'r') as f:
         mean_std = json.load(f)
 
     means = np.array(mean_std['means'])

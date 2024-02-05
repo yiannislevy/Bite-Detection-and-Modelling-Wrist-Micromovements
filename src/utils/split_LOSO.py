@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import pickle as pkl
 
-with open ("../../data/FIC.pkl", "rb") as f:
+with open ("../../data/original/FIC.pkl", "rb") as f:
     FIC = pkl.load(f)
 
 # Open the processed dataset

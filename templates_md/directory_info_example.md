@@ -1,7 +1,8 @@
 # Experiment Overview
+(Include a summary of what this file serves as an explanation for (eg. data, models))
 
 ## Basic Information
-- **Date of Experiment**: `YYYY-MM-DD`
+- **Date of Experiment**: `DD-MM-YYYY`
 - **Data Type**: `Sessions` | `Subjects`
 - **Directory Path**: `relative/or/absolute/path/to/data`
 

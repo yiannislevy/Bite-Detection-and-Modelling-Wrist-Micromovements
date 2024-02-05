@@ -21,17 +21,13 @@ venv/
 data/lstm_training_data
 data/old_cnn_processed.nosync
 data/ProcessedSubjects
-data/bite_gt.pkl
-data/bite_gt_1.pkl
-data/mm_gt.pkl
-data/FIC.pkl
+data/original
 data/cnn_predictions
 data/predictions
-data/new_test
-data/all_sessions.pkl
 
 /notebooks/test.ipynb
 /notebooks/test2.ipynb
+/notebooks/test_3.ipynb
 /notebooks/debug.ipynb
 
 models/

@@ -11,18 +11,19 @@ def load_start_time(start_time_json_path, session): # TODO: move to data_io
     return start_times[f"{session}"][0]
 
 
-def append_timestamps_to_predictions(predictions, session_id):
+def append_timestamps_to_predictions(predictions, session_id, path_to_timestamps):
     """
     Appends timestamps to each row in the prediction array from a provided file.
 
     Args:
     - predictions (numpy.array): A numpy array of shape Kx5 containing prediction data.
+    - session_id (int): An integer for identifying the current session.
     - timestamps_file_path (str): Path to the file containing timestamps for each prediction.
 
     Returns:
     - numpy.array: An array of shape Kx6, where the last column represents the timestamps.
     """
-    timestamps_file_path = f"../data/ProcessedSubjects/MajorityLabel/sessions/timestamps/timestamps_session_{session_id}.pkl"
+    timestamps_file_path = f"{path_to_timestamps}/timestamps_session_{session_id}.pkl"
     # Load timestamps from the file
     with open(timestamps_file_path, "rb") as file:
         timestamps = pickle.load(file)

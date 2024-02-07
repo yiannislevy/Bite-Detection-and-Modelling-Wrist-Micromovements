@@ -24,6 +24,7 @@ data/ProcessedSubjects
 data/original
 data/cnn_predictions
 data/predictions
+data/temp_files
 
 /notebooks/test.ipynb
 /notebooks/test2.ipynb

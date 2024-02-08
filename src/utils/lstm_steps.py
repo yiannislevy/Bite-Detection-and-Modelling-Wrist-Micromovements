@@ -9,31 +9,6 @@ Functions:
 - create_positive_example_bites(predictions, labels, window_length, step_in_ms): Creates positive example data for bite events.
 """
 import numpy as np
-import json
-import pickle
-
-
-def load_bite_gt_data(bite_gt_path): # TODO: move to data_io
-    """ Load the bite_gt data from the given paths. """
-    bite_gt = np.load(bite_gt_path, allow_pickle=True)
-    return bite_gt
-
-
-def load_cnn_predictions(subject_to_indices, predictions_path): # TODO: move to data_io
-    predictions = {}
-    for _, sessions in subject_to_indices.items():
-        for session in sessions:
-            with open(f"{predictions_path}/prediction_{session}.pkl", "rb") as f:
-                prediction = pickle.load(f)
-            predictions[session] = prediction
-    return predictions
-
-
-def load_start_time(start_time_json_path, subject):
-    """ Load the start time for the given subject from the JSON file. """
-    with open(start_time_json_path, 'r') as file:
-        start_times = json.load(file)
-    return start_times[subject]
 
 
 def find_index_for_timestamp(timestamp, predictions):
@@ -65,6 +40,11 @@ def extract_data_for_bite_window(start_time, end_time, predictions, window_lengt
 
 
 def create_positive_example_bites(predictions, labels, window_length=9, sample_rate=0.1):
+    # Note for future reference: this function allows for up to 1 sample tolerance in bite length above the limit only IF
+    # it is still within the (window_length / sample_rate) window.
+    # True example: FIC's bite_gt[20][19] (session 21, bite 20) -> bite's length = 9.007. This passes as a positive
+    # example since the raw imu's data --> prediction data's timestamps allow for precisely 90 samples in that timeframe.
+    # Same as bite_gt[17][24] -> bite's length is 9.045 and prediction data fill the entirety of the window's 90 samples.
     bite_duration_data = []
     removed_bite = 0
     for start_time, end_time in labels:

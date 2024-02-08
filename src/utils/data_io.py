@@ -1,6 +1,8 @@
 import os
 import pickle
 
+import numpy as np
+
 
 def save_data(data, processed_data_directory, filename):
     """
@@ -23,3 +25,17 @@ def save_data(data, processed_data_directory, filename):
         pickle.dump(data, file)
 
 
+def load_bite_gt_data(bite_gt_path):
+    """ Load the bite_gt data from the given paths. """
+    bite_gt = np.load(bite_gt_path, allow_pickle=True)
+    return bite_gt
+
+
+def load_cnn_predictions(subject_to_indices, predictions_path):
+    predictions = {}
+    for _, sessions in subject_to_indices.items():
+        for session in sessions:
+            with open(f"{predictions_path}/prediction_{session}.pkl", "rb") as f:
+                prediction = pickle.load(f)
+            predictions[session] = prediction
+    return predictions

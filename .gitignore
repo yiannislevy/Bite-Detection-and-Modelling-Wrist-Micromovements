@@ -11,7 +11,7 @@ __pycache__/
 
 # Jupyter notebook checkpoints and files
 .ipynb_checkpoints/
-notebooks/test.ipynb
+notebooks/testing/test.ipynb
 
 # Virtual environment
 env/
@@ -26,10 +26,9 @@ data/cnn_predictions
 data/predictions
 data/temp_files
 
-/notebooks/test.ipynb
-/notebooks/test2.ipynb
-/notebooks/test_3.ipynb
-/notebooks/debug.ipynb
+/notebooks/testing
+
+/src/archive
 
 models/
 

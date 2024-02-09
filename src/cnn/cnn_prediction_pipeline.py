@@ -27,9 +27,8 @@ import numpy as np
 import pandas as pd
 import keras
 from keras.optimizers.legacy import Adam as LegacyAdam
-from src.utils.preprocessing import load_data
-from src.utils.data_io import save_data
-from src.utils.utilities import append_timestamps_to_predictions, split_predictions_to_sessions
+from src.utils.data_io import save_data, load_data
+from src.utils.prediction_utilities import append_timestamps_to_predictions, split_predictions_to_sessions
 # TODO FIX PATH ISSUE!
 # TODO STREAMLINE EVERYTHING
 # Paths

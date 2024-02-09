@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+
 def plot_histograms(data):
     plt.figure(figsize=(12, 8))
     for i in range(data.shape[1]):

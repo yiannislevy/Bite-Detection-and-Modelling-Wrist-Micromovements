@@ -18,9 +18,6 @@ env/
 venv/
 .venv/
 
-data/lstm_training_data
-data/old_cnn_processed.nosync
-data/ProcessedSubjects
 data/original
 data/cnn_predictions
 data/predictions
@@ -30,4 +27,27 @@ data/temp_files
 
 models/
 
+data/*
+!data/dataset-info-json
+!data/ProcessedSubjects/
+!data/cnn_predictions/
+
+
+data/cnn_predictions/*
+!data/cnn_predictions/full
+
+
+data/ProcessedSubjects/*
+!data/ProcessedSubjects/for_predictions
+data/ProcessedSubjects/for_predictions/*
+!data/ProcessedSubjects/for_predictions/full_imu
+
+!data/ProcessedSubjects/MajorityLabel/
+data/ProcessedSubjects/MajorityLabel/*
+!data/ProcessedSubjects/MajorityLabel/sessions/
+data/ProcessedSubjects/MajorityLabel/sessions/*
+!data/ProcessedSubjects/MajorityLabel/sessions/grav_n_med/
+data/ProcessedSubjects/MajorityLabel/sessions/grav_n_med/*
+!data/ProcessedSubjects/MajorityLabel/sessions/grav_n_med/full_std_3/
+!data/ProcessedSubjects/MajorityLabel/sessions/timestamps
 

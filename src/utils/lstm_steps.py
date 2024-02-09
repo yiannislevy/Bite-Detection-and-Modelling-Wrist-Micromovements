@@ -58,7 +58,7 @@ def create_positive_example_bites(predictions, labels, window_length=9, sample_r
     return bite_duration_data, removed_bite
 
 
-def create_negative_example_bites(predictions, bite_times, window_length_sec=9, sample_rate=0.1):
+def create_negative_example_bites(predictions, bite_times, window_length=9, sample_rate=0.1):
     """
     Generate negative example windows for non-bite durations.
 
@@ -66,19 +66,19 @@ def create_negative_example_bites(predictions, bite_times, window_length_sec=9, 
     - predictions: numpy array with shape (N, 6) where N is the number of predictions.
     - bite_times: numpy array with shape (M, 2) where M is the number of bite events,
                   each row containing the start and end times of a bite.
-    - window_length_sec: int, length of each window in seconds.
+    - window_length: int, length of each window in seconds.
     - sample_rate: float, the time in seconds between each prediction sample.
 
     Returns:
     - A list of numpy arrays, each representing a negative example window.
     """
     negative_windows = []
-    sample_step = int(window_length_sec / sample_rate)  # Number of samples in a window
+    sample_step = int(window_length / sample_rate)  # Number of samples in a window
     step_size = 1  # Sliding window step in samples (0.1 second)
 
     # Add a virtual bite at the beginning and end of the session to simplify logic
     virtual_start_bite = np.array([[0, predictions[0, 5] - sample_rate]])
-    virtual_end_bite = np.array([[predictions[-1, 5] + sample_rate, predictions[-1, 5] + sample_rate + window_length_sec]])
+    virtual_end_bite = np.array([[predictions[-1, 5] + sample_rate, predictions[-1, 5] + sample_rate + window_length]])
     all_bites = np.vstack((virtual_start_bite, bite_times, virtual_end_bite))
 
     for i in range(len(all_bites) - 1):
@@ -95,7 +95,7 @@ def create_negative_example_bites(predictions, bite_times, window_length_sec=9, 
             if padding_length > 0:
                 padding = np.zeros((padding_length, window_data.shape[1]))
                 window_data = np.vstack((window_data, padding))
-            negative_windows.append(window_data)
+            negative_windows.append((window_data, 0))
         else:
             # Longer than 9 seconds, use sliding window approach
             num_windows = (end_index - start_index - sample_step) // step_size + 1
@@ -103,6 +103,6 @@ def create_negative_example_bites(predictions, bite_times, window_length_sec=9, 
                 window_start_index = start_index + j * step_size
                 window_end_index = window_start_index + sample_step
                 window_data = predictions[window_start_index:window_end_index]
-                negative_windows.append(window_data)
+                negative_windows.append((window_data, 0))
 
     return negative_windows

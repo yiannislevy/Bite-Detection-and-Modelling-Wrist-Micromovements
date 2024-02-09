@@ -124,9 +124,9 @@ def process_windows_and_assign_labels(session, mm_gt_session):
     for window in session:
         mid_timestamp = find_mid_timestamp_of_window(window)
         label = assign_label_to_window(mid_timestamp, mm_gt_session)
-        if label != 6:  # Skip windows with label '6' aka 'Other'
-            one_hot_label = one_hot_encode(label)
-            labeled_windows.append((window, one_hot_label))
+        # if label != 6:  # Skip windows with label '6' aka 'Other'
+        one_hot_label = one_hot_encode(label, 6)
+        labeled_windows.append((window, one_hot_label))
     return labeled_windows
 
 
@@ -167,18 +167,18 @@ def assign_label_to_window_majority(window_labels, threshold=0.75):
 def process_single_session(signal_session, label_session):
     removed_gravity_data = remove_gravity(signal_session)
     filtered_data = median_filter(removed_gravity_data)
-    common_data, common_labels = find_common_timeframe(filtered_data, label_session)
-    windowed_data = sliding_window(common_data)
-    adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
+    # common_data, common_labels = find_common_timeframe(filtered_data, label_session)
+    windowed_data = sliding_window(filtered_data)
+    # adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
     standardized_windows = standardize_windows(windowed_data)
     # option 1:
-    # final_processed = process_windows_and_assign_labels(windowed_data, adjusted_labels)
+    # final_processed = process_windows_and_assign_labels(standardized_windows, adjusted_labels)
     # option 2:
-    final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
+    # final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
 
     # final_processed_no_timestamp = [(window[:, 1:], label) for window, label in final_processed]
 
-    return final_processed
+    return standardized_windows
 
 
 def process_all_sessions(signals, labels):

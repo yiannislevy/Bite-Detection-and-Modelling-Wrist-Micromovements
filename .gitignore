@@ -50,6 +50,3 @@ data/ProcessedSubjects/MajorityLabel/sessions/*
 data/ProcessedSubjects/MajorityLabel/sessions/grav_n_med/*
 !data/ProcessedSubjects/MajorityLabel/sessions/grav_n_med/full_std_3/
 !data/ProcessedSubjects/MajorityLabel/sessions/timestamps
-
-!data/lstm_training_data/
-!data/lstm_training_data/*

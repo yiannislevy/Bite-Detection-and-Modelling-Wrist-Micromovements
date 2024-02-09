@@ -33,8 +33,8 @@ def extract_data_for_bite_window(start_time, end_time, predictions, window_lengt
         padding = np.zeros((padding_length, bite_data.shape[1]))
         bite_data = np.vstack((bite_data, padding))
     else:
-        print(f"Error in making bite windows. Expected length: {required_samples}, actual length: {bite_data.shape[0]}.")
-        print(f"Info on window:\t\tStart time: {start_index}) {start_time}\tEnd time: {end_index}) {end_time}.\n\n")
+        # print(f"Error in making bite windows. Expected length: {required_samples}, actual length: {bite_data.shape[0]}.")
+        # print(f"Info on window:\t\tStart time: {start_index}) {start_time}\tEnd time: {end_index}) {end_time}.\n\n")
         return None
 
     return bite_data

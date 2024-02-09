@@ -6,7 +6,8 @@ CNN predictions, extracting bite data segments, and preparing these for further 
 Functions:
 - find_index_for_timestamp(timestamp, predictions): Finds the index in the predictions array corresponding to a given timestamp.
 - extract_data_for_bite_window(start_time, end_time, predictions, window_length, step): Extracts a slice of prediction data corresponding to a specific time window.
-- create_positive_example_bites(predictions, labels, window_length, step_in_ms): Creates positive example data for bite events.
+- create_positive_example_bites(predictions, labels, window_length, sample_rate): Creates positive example data for bite events with label.
+- create_negative_example_bites(predictions, labels, window_length, sample_rate): Created negative example data for bite events with label.
 """
 import numpy as np
 
@@ -70,7 +71,7 @@ def create_negative_example_bites(predictions, bite_times, window_length=9, samp
     - sample_rate: float, the time in seconds between each prediction sample.
 
     Returns:
-    - A list of numpy arrays, each representing a negative example window.
+    - A list of numpy arrays, each representing a negative example window, with its label.
     """
     negative_windows = []
     sample_step = int(window_length / sample_rate)  # Number of samples in a window
@@ -95,7 +96,7 @@ def create_negative_example_bites(predictions, bite_times, window_length=9, samp
             if padding_length > 0:
                 padding = np.zeros((padding_length, window_data.shape[1]))
                 window_data = np.vstack((window_data, padding))
-            negative_windows.append((window_data, 0))
+            negative_windows.append((window_data, 0)) # Add label
         else:
             # Longer than 9 seconds, use sliding window approach
             num_windows = (end_index - start_index - sample_step) // step_size + 1
@@ -103,6 +104,6 @@ def create_negative_example_bites(predictions, bite_times, window_length=9, samp
                 window_start_index = start_index + j * step_size
                 window_end_index = window_start_index + sample_step
                 window_data = predictions[window_start_index:window_end_index]
-                negative_windows.append((window_data, 0))
+                negative_windows.append((window_data, 0)) # Add label
 
     return negative_windows

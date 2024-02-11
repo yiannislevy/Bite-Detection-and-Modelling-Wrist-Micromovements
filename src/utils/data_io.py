@@ -142,7 +142,7 @@ def load_prediction_data(test_subject, subject_to_indices, balanced_training_dat
         for session_id in sessions:
             # Adjust session_id to zero-based index if necessary
             session_index = session_id - 1  # Assuming session_id starts from 1 and matches the list order
-            session_data, session_labels = load_session_data(balanced_training_data[session_index])
+            session_data, session_labels = load_prediction_session_data(balanced_training_data[session_index])
 
             subject_data.append(session_data)
             subject_labels.append(session_labels)
@@ -163,3 +163,10 @@ def load_prediction_data(test_subject, subject_to_indices, balanced_training_dat
     testing_labels = np.concatenate(testing_labels, axis=0)
 
     return training_data, training_labels, testing_data, testing_labels
+
+
+def load_prediction_session_data(session_data):
+    # Extract signal data excluding the sixth column (timestamp) from each window
+    signal_data = np.array([item[0][:, :5] for item in session_data])  # Selects only the first five columns
+    label_data = np.array([item[1] for item in session_data])
+    return signal_data, label_data

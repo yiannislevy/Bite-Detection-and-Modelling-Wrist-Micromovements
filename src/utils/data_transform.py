@@ -1,12 +1,28 @@
 import numpy as np
 
 
-def sliding_window(signal, window_length = 20, step_size = 10):
-    windowed_data = []
-    for session in signal:
-        num_windows = (session.shape[0] - window_length) // step_size + 1
-        for i in range(num_windows):
-            start_idx = i * step_size
-            end_idx = start_idx + window_length
-            windowed_data.append(session[start_idx:end_idx])
-    return np.array(windowed_data)
+def sliding_window(data, window_length, step_size):
+    """
+    Generate windows from the data using a sliding window approach.
+
+    Parameters:
+    - data: numpy array of shape (n_samples, n_features), where n_samples is the number of samples
+      and n_features is the number of features.
+    - window_length: int, the length of the window.
+    - step_size: int, the number of samples to step forward in the window sliding process.
+
+    Returns:
+    - windows: numpy array of shape (n_windows, window_length, n_features), where n_windows is
+      the number of windows generated.
+    """
+    n_samples, n_features = data.shape
+    n_windows = ((n_samples - window_length) // step_size) + 1
+    # Initialize an empty array for the windows
+    windows = np.empty((n_windows, window_length, n_features))
+
+    for i in range(n_windows):
+        start = i * step_size
+        end = start + window_length
+        windows[i] = data[start:end]
+
+    return windows

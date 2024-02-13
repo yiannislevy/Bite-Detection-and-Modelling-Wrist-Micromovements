@@ -33,15 +33,15 @@ from src.utils.prediction_utilities import append_timestamps_to_predictions, spl
 # TODO STREAMLINE EVERYTHING
 # Paths
 path_to_models = "../models/full_loso/majority_label/processed/std_3/"
-path_to_save = "../data/cnn_predictions/full/timestamped"
+path_to_save = "../data/cnn_predictions/complete/timestamped"
 path_to_data = "../data/ProcessedSubjects/for_predictions/full_imu/"
 
 # Load subject to indices and session start times
-with open("../data/dataset-info-json/subject_to_indices.json", "r") as f:
+with open("../../data/dataset-info-json/subject_to_indices.json", "r") as f:
     subject_to_indices = json.load(f)
 subject_to_indices = {int(k): v for k, v in subject_to_indices.items()}
 
-with open("../data/dataset-info-json/signal_start_times-MAJORITY-LABELS.json", "r") as f:
+with open("../../data/dataset-info-json/signal_start_times-MAJORITY-LABELS.json", "r") as f:
     session_start_time_and_length = json.load(f)
 
 
@@ -104,5 +104,38 @@ def save_predictions_sessioned():
             predictions = np.array(predictions)
             predictions = predictions.squeeze(axis=1)
 
-            timestamped_predictions = append_timestamps_to_predictions(predictions, session_id, f"{path_to_data}/timestamps")
+            timestamped_predictions = append_timestamps_to_predictions(predictions, session_id,
+                                                                       f"{path_to_data}/timestamps")
             save_data(timestamped_predictions, path_to_save, f"prediction_{session_id}")
+
+
+def save_predictions_sessioned_single_model(path_to_model, path_to_data, path_to_save):
+    """
+    Processes and saves predictions for each session using a single model.
+    Loads a single model, generates predictions from test data,
+    organizes these predictions by session with timestamps, and saves them.
+    """
+    # Load a single model here. Adjust the model loading logic as needed.
+    model = keras.models.load_model(path_to_model, compile=False)
+    model.compile(optimizer=LegacyAdam(learning_rate=1e-3), loss='categorical_crossentropy', metrics=["accuracy"])
+
+    # Assuming you have a way to list all session IDs. Adjust as necessary.
+
+    for session_id in range(1,22):
+        session_path = f"{path_to_data}/session_{session_id}.pkl"
+        test_data = pd.read_pickle(session_path)
+        test_data = test_data[:, :, 1:]  # Adjust preprocessing as needed for your data.
+
+        # Generate predictions
+        predictions = []
+        for window in test_data:
+            window_reshaped = window.reshape(1, 20, 6)  # Adjust shape as needed for your model.
+            prediction = model.predict(window_reshaped)
+            predictions.append(prediction)
+        predictions = np.array(predictions)
+        predictions = predictions.squeeze(axis=1)
+
+        # Timestamps and saving logic remains the same
+        timestamped_predictions = append_timestamps_to_predictions(predictions, session_id,
+                                                                   f"{path_to_data}/timestamps")
+        save_data(timestamped_predictions, path_to_save, f"prediction_{session_id}")

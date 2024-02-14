@@ -1,28 +1,24 @@
 import matplotlib.pyplot as plt
 
 
-def plot_training_results(accuracy, loss):
-    flattened_accuracy = [item for item in accuracy]
-    flattened_loss = [item for item in loss]
+def plot_metric(metric_values, metric_name, save_path):
+    """
+    Plots a single metric (e.g., accuracy or loss) over epochs and saves the plot as an SVG file.
 
-    epochs = range(1, len(flattened_accuracy) + 1)  # Assuming 1 value per epoch
+    Parameters:
+    - metric_values: List of metric values over epochs.
+    - metric_name: The name of the metric (e.g., 'Accuracy', 'Loss').
+    - save_path: Path to save the SVG plot.
+    """
+    epochs = range(1, len(metric_values) + 1)
 
-    # Plotting both the training accuracy and loss
-    plt.figure(figsize=(12, 6))
-
-    plt.subplot(1, 2, 1)
-    plt.plot(epochs, flattened_accuracy, label='Accuracy', color='blue')
-    plt.title('Training Accuracy')
+    plt.figure(figsize=(8, 6))
+    plt.plot(epochs, metric_values, label=metric_name, color='blue' if metric_name == 'Accuracy' else 'red')
+    plt.title(f'Training {metric_name}')
     plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
+    plt.ylabel(metric_name)
     plt.legend()
 
-    plt.subplot(1, 2, 2)
-    plt.plot(epochs, flattened_loss, label='Loss', color='red')
-    plt.title('Training Loss')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
+    # Save the figure as an SVG for high-quality scaling
+    plt.savefig(save_path, format='svg')
+    # plt.close() # Optional: uncomment to close the plot after saving to preserve memory

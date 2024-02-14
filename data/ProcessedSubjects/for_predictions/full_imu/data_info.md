@@ -19,7 +19,7 @@
 - **Timestamps Included**: `Yes`
 - **Window Structure**: `20x7` (indicate if timestamps are included)
 - **Labels Structure** N/A 
-- 
+
 ## Additional Notes
 Raw complete imu data from start to finish as if they were straight from an unknown source.
 These are data to be used for predictions. They include the 'other' micromovement, no trimming or labels included.

@@ -12,6 +12,7 @@
 ### Prediction Data
 - **Data Used**: `Processed data but unlabelled, complete with nothing discarded. 'Raw' imu data as if its unknown.`
 - **Source Path**: `data/ProcessedSubjects/for_predictions/full_imu/sessions`
+- **LOSO**: yes
 
 ### Prediction Details
 

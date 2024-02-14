@@ -24,6 +24,8 @@ data/predictions
 data/temp_files
 
 /notebooks/testing
+/notebooks/try_raw.ipynb
+/notebooks/playground.ipynb
 
 models/
 
@@ -35,7 +37,7 @@ data/lstm_training_data/
 
 
 data/cnn_predictions/*
-!data/cnn_predictions/full
+!data/cnn_predictions/complete
 
 
 data/ProcessedSubjects/*

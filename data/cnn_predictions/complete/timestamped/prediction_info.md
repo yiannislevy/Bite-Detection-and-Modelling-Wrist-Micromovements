@@ -6,7 +6,7 @@
 `07-02-2024`
 
 ### Model Information
-- **Model Path**: `models/full_loso/majority_label/processed/std_3`
+- **Model Path**: [models/full_loso/majority_label/processed/std_3](../../../../models/full_loso/majority_label/processed/std_3)
 - **Model Identifier**: N/A
 
 ### Prediction Data

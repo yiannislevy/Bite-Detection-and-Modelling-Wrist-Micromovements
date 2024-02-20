@@ -10,7 +10,7 @@ Eating Behavior From Inertial Sensor Data` which can be found [here](https://doi
 1. Process publicly available [dataset](https://zenodo.org/records/4421861).
 2. Train CNN for micromovement prediction.
 3. Process said predictions accordingly for LSTM
-4. ~~Train LSTM~~
+4. Train LSTM
 
 ## Details
 
@@ -49,4 +49,8 @@ negative examples of a bite, matching predictions and with windows corresponding
 inbetween timeframes for non-bites.
 - [lstm_steps.py](src/lstm/lstm_steps.py): contains logic for positive and negative bites and some helper functions.
 - [lstm_preprocessing.ipynb](notebooks/lstm/lstm_preprocessing.ipynb): contains the pipeline for the complete preprocessing.
-
+- [train_lstm.ipynb](notebooks/lstm/train_lstm.ipynb): contains the pipeline to
+  - train and evaluate in non-academic loso
+  - train academically 1 full model and further tuning options
+  - load & save from checkpoint
+  - plot

@@ -123,21 +123,22 @@ def plot_data_with_ground_truth_events(times, cumulative_weight, predictions, gr
     plt.savefig("../data/my_dataset/19_cc/lstm/gt_vs_pred.png", dpi=1200, bbox_inches='tight', pad_inches=0.5)
     plt.show()
 
-    def plot_bites(bite_event_predictions):
-        """
-            Plot the bite event predictions over time. A simple line plot is used to visualize the probabilities.
 
-            Parameters:
-            - bite_event_predictions: numpy.ndarray, array of bite event predictions obtained from the LSTM model.
-        """
-        time_indices = np.arange(len(bite_event_predictions))  # Generate time indices
+def plot_bites(bite_event_predictions):
+    """
+        Plot the bite event predictions over time. A simple line plot is used to visualize the probabilities.
 
-        # Plot the probabilities
-        plt.figure(figsize=(20, 5))  # Set the figure size
-        plt.plot(time_indices, bite_event_predictions, label='Predicted Probability')
+        Parameters:
+        - bite_event_predictions: numpy.ndarray, array of bite event predictions obtained from the LSTM model.
+    """
+    time_indices = np.arange(len(bite_event_predictions))  # Generate time indices
 
-        plt.title('Predicted Bite Probabilities Over Time')
-        plt.xlabel('Window Index')
-        plt.ylabel('Probability')
-        plt.legend()
-        plt.show()
+    # Plot the probabilities
+    plt.figure(figsize=(20, 5))  # Set the figure size
+    plt.plot(time_indices, bite_event_predictions, label='Predicted Probability')
+
+    plt.title('Predicted Bite Probabilities Over Time')
+    plt.xlabel('Window Index')
+    plt.ylabel('Probability')
+    plt.legend()
+    plt.show()

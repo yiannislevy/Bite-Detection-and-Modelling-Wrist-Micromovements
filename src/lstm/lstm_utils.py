@@ -68,3 +68,33 @@ def shuffle_examples(combined_sessions):
     for session_id in combined_sessions.keys():
         shuffle(combined_sessions[session_id])
     return combined_sessions
+
+
+def sliding_window_pad(data, window_length=90, step_size=1, min_data_length=35):
+    """
+    Generate windows from the data using a sliding window approach with variable data length.
+    A necessary preprocessing step for feeding the LSTM data for obtaining predictions.
+
+    Parameters:
+    - data: numpy array of shape (n_samples, n_features), where n_samples is the number of samples
+      and n_features is the number of features. CNN predictions.
+    - window_length: int, the total length of the window (including padding if necessary).
+    - step_size: int, the number of samples to step forward in the window sliding process.
+    - min_data_length: int, the minimum length of actual data to be present in each window.
+
+    Returns:
+    - windows: numpy array of shape (n_windows, window_length, n_features), where n_windows is
+      the number of windows generated.
+    """
+    n_samples, n_features = data.shape
+    n_windows = ((n_samples - min_data_length) // step_size) + 1
+    # Initialize an empty array for the windows
+    windows = np.zeros((n_windows, window_length, n_features))
+
+    for i in range(n_windows):
+        start = i * step_size
+        end = start + min_data_length
+        # Fill the window with data and pad the rest with zeros
+        windows[i, :end - start, :] = data[start:end]
+
+    return windows

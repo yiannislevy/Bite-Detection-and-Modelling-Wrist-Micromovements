@@ -24,8 +24,9 @@ data/predictions
 data/temp_files
 
 /notebooks/testing
-/notebooks/try_raw.ipynb
+/notebooks/try_raw_pipeline.ipynb
 /notebooks/playground.ipynb
+/notebooks/mando_pred_viz.ipynb
 
 models/
 

@@ -27,6 +27,7 @@ data/temp_files
 /notebooks/try_raw_pipeline.ipynb
 /notebooks/playground.ipynb
 /notebooks/mando_pred_viz.ipynb
+/notebooks/modelling.ipynb
 
 models/
 

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+from src.utils.mando_tools import count_bites
 
 
 def plot_histograms(data):
@@ -63,6 +64,30 @@ def plot_probability_distributions(predictions, start_index, num_windows):
     plt.show()
 
 
+def plot_faceted_micromovements(predictions, start_index, end_index):
+    # Define the order of categories
+    categories = ['Pick Food', 'Upwards', 'Mouth', 'Downwards', 'No Movement']
+    category_indices = [3, 1, 4, 2, 0]  # Indices of the categories in the original order
+
+    # Create a faceted plot for each category
+    fig, axes = plt.subplots(nrows=len(categories), ncols=1, figsize=(14, 10), sharex=True)
+
+    for i, category_index in enumerate(category_indices):
+        axes[i].plot(range(start_index, end_index), predictions[start_index:end_index, category_index], label=categories[i])
+        axes[i].set_ylabel(categories[i])
+        axes[i].legend(loc='upper right')
+
+    # Set common labels
+    plt.xlabel('Window Index')
+    plt.suptitle('Faceted Plot of Micromovements Distribution (Windows {} to {})'.format(start_index, end_index))
+
+    # Adjust layout
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+    # Show the plot
+    plt.show()
+
+
 def plot_mando_and_lstm_preds(times, cumulative_weight, predictions):
     """
     Plot cumulative weight and prediction probabilities over time.
@@ -120,7 +145,7 @@ def plot_data_with_ground_truth_events(times, cumulative_weight, predictions, gr
     plt.subplots_adjust(top=0.88)  # Adjust the top padding to give more space for the title
     plt.title('Cumulative Weight vs. Prediction Probability Over Time with Bite Events')
     plt.legend(loc="upper left")
-    plt.savefig("../data/my_dataset/19_cc/lstm/gt_vs_pred.png", dpi=1200, bbox_inches='tight', pad_inches=0.5)
+    # plt.savefig("../data/my_dataset/19_cc/lstm/gt_vs_pred.png", dpi=1200, bbox_inches='tight', pad_inches=0.5)
     plt.show()
 
 

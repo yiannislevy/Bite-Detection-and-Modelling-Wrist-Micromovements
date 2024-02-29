@@ -14,8 +14,6 @@ Eating Behavior From Inertial Sensor Data` which can be found [here](https://doi
 
 ## Details
 
-In this project we focused on the first three steps. Right before training LSTM, focus shifted and trained models were no longer needed.
-
 The dataset `FIC` provided is a dictionary. Contains following keys:
 
 - `subject_id`: Integers on subject ids.
@@ -47,8 +45,12 @@ visualizing the predictions with custom visualization functions called.
 - Preprocessing for the LSTM required meticulous work, as it required obtaining windows of data for positive and 
 negative examples of a bite, matching predictions and with windows corresponding to actual lengths of bite or their 
 inbetween timeframes for non-bites.
-- [lstm_steps.py](src/lstm/lstm_steps.py): contains logic for positive and negative bites and some helper functions.
 - [lstm_preprocessing.ipynb](notebooks/lstm/lstm_preprocessing.ipynb): contains the pipeline for the complete preprocessing.
+
+
+### Step 4:
+
+- [lstm_steps.py](src/lstm/lstm_steps.py): contains logic for positive and negative bites and some helper functions.
 - [train_lstm.ipynb](notebooks/lstm/train_lstm.ipynb): contains the pipeline to
   - train and evaluate in non-academic loso
   - train academically 1 full model and further tuning options

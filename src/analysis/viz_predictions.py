@@ -145,7 +145,7 @@ def plot_data_with_ground_truth_events(times, cumulative_weight, predictions, gr
     plt.subplots_adjust(top=0.88)  # Adjust the top padding to give more space for the title
     plt.title('Cumulative Weight vs. Prediction Probability Over Time with Bite Events')
     plt.legend(loc="upper left")
-    # plt.savefig("../data/my_dataset/19_cc/lstm/gt_vs_pred.png", dpi=1200, bbox_inches='tight', pad_inches=0.5)
+    plt.savefig("../data/my_dataset/19/lstm/gt_vs_pred.png", dpi=1200, bbox_inches='tight', pad_inches=0.5)
     plt.show()
 
 

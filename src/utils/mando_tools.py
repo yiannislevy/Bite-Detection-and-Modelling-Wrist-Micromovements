@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.signal import find_peaks
 
 
 def resample_ground_truth(ground_truth):

@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 import json
 import pandas as pd
+from scipy.signal import find_peaks
 
 
 def append_timestamps_to_predictions(predictions, session_id, path_to_timestamps):

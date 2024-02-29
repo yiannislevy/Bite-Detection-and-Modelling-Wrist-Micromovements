@@ -183,7 +183,7 @@ def plot_predictions_vs_ground_truth(predictions, ground_truth, peaks):
     timeline = predictions[:, 1]
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(20, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(timeline, prediction_values, 'b:', label='Prediction', linewidth=0.5)
     ax.plot(timeline[peaks], prediction_values[peaks], 'r*', markersize=8, label='Detected Peaks')
 

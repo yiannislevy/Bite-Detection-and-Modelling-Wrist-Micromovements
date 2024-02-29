@@ -28,6 +28,7 @@ data/temp_files
 /notebooks/playground.ipynb
 /notebooks/mando_pred_viz.ipynb
 /notebooks/modelling.ipynb
+/notebooks/WeightPrediction.ipynb
 
 models/
 

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-from src.utils.mando_tools import count_bites
+from src.utils.prediction_utilities import count_bites
 
 
 def plot_histograms(data):
@@ -166,4 +166,33 @@ def plot_bites(bite_event_predictions):
     plt.xlabel('Window Index')
     plt.ylabel('Probability')
     plt.legend()
+    plt.show()
+
+
+def plot_predictions_vs_ground_truth(predictions, ground_truth, peaks):
+    """
+    Plot the prediction probabilities against the ground truth data.
+
+    Parameters:
+    - predictions: numpy.ndarray, the predictions array.
+    - ground_truth: numpy.ndarray, the ground truth array.
+    - peaks: numpy.ndarray, indices of the detected peaks in predictions.
+    """
+    # Extract prediction probabilities and timestamps
+    prediction_values = predictions[:, 0]
+    timeline = predictions[:, 1]
+
+    # Plotting
+    fig, ax = plt.subplots(figsize=(20, 6))
+    ax.plot(timeline, prediction_values, 'b:', label='Prediction', linewidth=0.5)
+    ax.plot(timeline[peaks], prediction_values[peaks], 'r*', markersize=8, label='Detected Peaks')
+
+    # Plot ground truth as gray windows
+    for start, end in ground_truth:
+        ax.axvspan(start, end, color='gray', alpha=0.3, label='Ground Truth' if 'Ground Truth' not in ax.get_legend_handles_labels()[1] else "")
+
+    ax.set_xlabel('Time (relative to common start)')
+    ax.set_ylabel('Prediction Probability')
+    ax.set_title('Predictions vs. Ground Truth')
+    ax.legend()
     plt.show()

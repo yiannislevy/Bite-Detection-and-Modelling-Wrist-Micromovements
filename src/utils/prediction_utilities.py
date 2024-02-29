@@ -103,3 +103,21 @@ def transform_timestamps_to_relative(data, start_time_str):
     data[:, 5] = time_differences
 
     return data
+
+
+def count_bites(bite_probabilities, threshold=0.75, min_distance=20):
+    """
+    Count the number of bites based on the provided probability threshold and minimum distance between peaks.
+
+    Parameters:
+    - bite_probabilities: 1D numpy array containing the probability of a bite event at each time point.
+    - threshold: float, the minimum height of peaks to be considered as bites.
+    - min_distance: int, the minimum number of samples between consecutive peaks.
+
+    Returns:
+    - num_bites: int, the number of bites detected.
+    - peaks: array, the indices of the peaks that were identified as bites.
+    """
+    peaks, _ = find_peaks(bite_probabilities, height=threshold, distance=min_distance)
+    num_bites = len(peaks)
+    return num_bites, peaks

@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 import json
+import pandas as pd
 
 
 def append_timestamps_to_predictions(predictions, session_id, path_to_timestamps):
@@ -73,3 +74,32 @@ def split_predictions_to_sessions(predictions, sessions, start_times_and_lengths
         temp += session_length
         sessioned_predictions[session_id] = session_predictions
     return sessioned_predictions
+
+
+def transform_timestamps_to_relative(data, start_time_str):
+    """
+    Transforms the timestamps of mm predictions in the 6th column of a numpy array to seconds since a reference start time (video's start time).
+
+    Parameters:
+    - data: A numpy array where the 6th column contains pandas datetime strings.
+    - start_datetime_str: The reference start date and time as a string.
+
+    Returns:
+    - A numpy array with the timestamps transformed to seconds since the reference start time.
+    """
+    # Ensure the data type of the array is object to accommodate mixed types
+    data = np.array(data, dtype=object)
+
+    # Convert the 6th column to datetime format
+    datetime_column = pd.to_datetime(data[:, 5])
+
+    # Convert the reference start time to datetime
+    start_time = pd.to_datetime(start_time_str)
+
+    # Calculate the difference in seconds from the reference time
+    time_differences = [(ts - start_time).total_seconds() for ts in datetime_column]
+
+    # Update the data structure with the new time differences
+    data[:, 5] = time_differences
+
+    return data

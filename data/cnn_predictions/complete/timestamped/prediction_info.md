@@ -11,7 +11,7 @@
 
 ### Prediction Data
 - **Data Used**: `Processed data but unlabelled, complete with nothing discarded. 'Raw' imu data as if its unknown.`
-- **Source Path**: `data/ProcessedSubjects/for_predictions/full_imu/sessions`
+- **Source Path**: [data_directory](../../../../data/ProcessedSubjects/for_predictions/full_imu/sessions) -> DATA ARE MISALIGNED NEEDS RETRAINING
 - **LOSO**: yes
 
 ### Prediction Details

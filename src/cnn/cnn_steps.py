@@ -261,18 +261,22 @@ def process_windows_assign_majority_label(session, mm_gt_session):
 # ----------------------------------------------------------------
 
 
-def process_single_session(signal_session, label_session):
+def process_single_session(signal_session, label_session, for_training=False, label='majority'):
     """
-        Processes a single session of signal data through a comprehensive preprocessing pipeline designed for signal analysis or input into machine learning models. The pipeline includes several steps such as gravity removal, noise filtering, windowing, and standardization of the signal data. It also includes alignment of signal and label data to a common timeframe and adjusting labels after windowing to ensure consistency and accuracy in the processed data.
+        Processes a single session of signal data through a comprehensive preprocessing pipeline. The pipeline
+        includes gravity removal, noise filtering, windowing, and standardization of the signal data. For training
+        data, it further includes alignment of signal and label data to a common timeframe, label adjustment after
+        windowing, and a choice between two labeling strategies. The final step removes timestamps for analysis or
+        modeling purposes.
 
         Steps:
-        1. Remove gravity effects from the signal data to focus on dynamic movements.
+        1. Remove gravity effects from the signal data to focus on the dynamic movements.
         2. Apply a median filter to smooth the data and reduce noise.
-        3. Find the common timeframe between filtered signal data and labels to synchronize data points with their corresponding labels.
-        4. Segment the data into smaller, overlapping windows using a sliding window technique, facilitating the analysis of time-series data in manageable chunks.
-        5. Adjust labels to ensure they correspond accurately to the newly created signal windows.
+        3. (For training) Find the common timeframe between filtered signal data and labels to synchronize data points with their corresponding labels.
+        4. Segment the data into smaller, overlapping windows using a sliding window technique. This facilitates the analysis of time-series data in manageable chunks.
+        5. (For training) Adjust labels to ensure they correspond accurately to the newly created signal windows.
         6. Standardize the signal windows to have a mean of zero and a standard deviation of one, normalizing the data across all sessions.
-        7. Select a labeling strategy for the windowed data:
+        7. (For training) Select a labeling strategy for the windowed data:
            a. Assign labels based on the midpoint timestamp of each window.
            b. Assign labels based on the majority label present within each window.
         8. Remove timestamps from the final processed data, keeping only signal values and their corresponding labels for analysis or modeling.
@@ -280,24 +284,44 @@ def process_single_session(signal_session, label_session):
         Args:
             signal_session (np.ndarray): Array containing the signal data for a single session.
             label_session (np.ndarray): Array containing the labels corresponding to the signal data.
+            for_training (bool): Flag indicating whether the data is being preprocessed for training (True) or for prediction (False).
 
         Returns:
-            np.ndarray: Array of standardized signal windows, each paired with its appropriate label, ready for further processing or analysis.
-        """
+            np.ndarray: Array of processed data, formatted according to the specified purpose (training or prediction).
+    """
+
     removed_gravity_data = remove_gravity(signal_session)
     filtered_data = median_filter(removed_gravity_data)
-    # common_data, common_labels = find_common_timeframe(filtered_data, label_session)
-    windowed_data = sliding_window(filtered_data)
-    # adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
+
+    if for_training:
+        common_data, common_labels = find_common_timeframe(filtered_data, label_session)
+    else:
+        common_data = filtered_data  # Placeholder, assuming find_common_timeframe modifies data for training
+
+    windowed_data = sliding_window(common_data)
+
+    if for_training:
+        adjusted_labels = find_common_timeframe_after_windowing(windowed_data, common_labels)
+    else:
+        adjusted_labels = None  # Placeholder for non-training mode
+
     standardized_windows = standardize_windows(windowed_data)
-    # option 1:
-    # final_processed = process_windows_and_assign_middle_sample_label(standardized_windows, adjusted_labels)
-    # option 2:
-    # final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
 
-    # final_processed_no_timestamp = [(window[:, 1:], label) for window, label in final_processed]
+    if for_training:
+        if label == 'middle':
+            # Option 1: Assign labels based on the midpoint timestamp of each window.
+            final_processed = process_windows_and_assign_middle_sample_label(standardized_windows, adjusted_labels)
+        elif label == 'majority':
+            # Option 2: Assign labels based on the majority label present within each window.
+            final_processed = process_windows_assign_majority_label(standardized_windows, adjusted_labels)
+        else:
+            final_processed = None
 
-    return standardized_windows
+        return final_processed
+    else:
+        # For prediction, return standardized windows without further processing.
+        return standardized_windows
+
 
 
 def process_all_sessions(signals, labels):

@@ -1,7 +1,7 @@
 import numpy as np
 import json
 from collections import Counter
-from scipy.signal import firwin, lfilter, medfilt
+from scipy.signal import firwin, filtfilt, medfilt
 
 
 def remove_gravity(data, sample_rate=100, cutoff_hz=1):
@@ -22,7 +22,7 @@ def remove_gravity(data, sample_rate=100, cutoff_hz=1):
 
     # Apply the filter to accelerometer data (columns 1 to 3)
     for i in range(1, 4):
-        data[:, i] = lfilter(hp_filter, 1.0, data[:, i])
+        data[:, i] = filtfilt(hp_filter, 1.0, data[:, i])
 
     return data
 

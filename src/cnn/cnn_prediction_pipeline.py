@@ -119,23 +119,20 @@ def save_predictions_sessioned_single_model(path_to_model, path_to_data, path_to
     model = keras.models.load_model(path_to_model, compile=False)
     model.compile(optimizer=LegacyAdam(learning_rate=1e-3), loss='categorical_crossentropy', metrics=["accuracy"])
 
-    # Assuming you have a way to list all session IDs. Adjust as necessary.
-
     for session_id in range(1,22):
         session_path = f"{path_to_data}/session_{session_id}.pkl"
         test_data = pd.read_pickle(session_path)
-        test_data = test_data[:, :, 1:]  # Adjust preprocessing as needed for your data.
+        test_data = test_data[:, :, 1:]
 
         # Generate predictions
         predictions = []
         for window in test_data:
-            window_reshaped = window.reshape(1, 20, 6)  # Adjust shape as needed for your model.
+            window_reshaped = window.reshape(1, 20, 6)
             prediction = model.predict(window_reshaped)
             predictions.append(prediction)
         predictions = np.array(predictions)
         predictions = predictions.squeeze(axis=1)
 
-        # Timestamps and saving logic remains the same
         timestamped_predictions = append_timestamps_to_predictions(predictions, session_id,
                                                                    f"{path_to_data}/timestamps")
         save_data(timestamped_predictions, path_to_save, f"prediction_{session_id}")

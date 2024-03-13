@@ -125,7 +125,7 @@ def standardize_windows(data):
     Returns:
         numpy.ndarray: The standardized windowed data.
     """
-    with open("../data/dataset-info-json/mean_std_values_3.json", 'r') as f:
+    with open("../../data/dataset-info-json/mean_std_values_3.json", 'r') as f:
         mean_std = json.load(f)
 
     means = np.array(mean_std['means'])
@@ -285,7 +285,7 @@ def process_single_session(signal_session, label_session, for_training=False, la
             signal_session (np.ndarray): Array containing the signal data for a single session.
             label_session (np.ndarray): Array containing the labels corresponding to the signal data.
             for_training (bool): Flag indicating whether the data is being preprocessed for training (True) or for prediction (False).
-
+            label (str): Flag indicating which labelling technique to follow between majority/middle
         Returns:
             np.ndarray: Array of processed data, formatted according to the specified purpose (training or prediction).
     """
@@ -321,7 +321,6 @@ def process_single_session(signal_session, label_session, for_training=False, la
     else:
         # For prediction, return standardized windows without further processing.
         return standardized_windows
-
 
 
 def process_all_sessions(signals, labels):

@@ -2,14 +2,15 @@ import numpy as np
 import json
 
 
-def calculate_mean_std(data):
+def calculate_mean_std(data, filename):
     means = np.mean(data[:, 1:], axis=0)
     std_devs = np.std(data[:, 1:], axis=0)
 
     mean_std = {'means': means.tolist(), 'std_devs': std_devs.tolist()}
-    path_to_save = "../data/dataset-info-json"
-    with open(f'{path_to_save}/mean_std_values_3.json', 'w') as f:
-        json.dump(mean_std, f)
+    path_to_save = "../../data/dataset-info-json"
+
+    with open(f'{path_to_save}/{filename}.json', 'w') as f:
+        json.dump(mean_std, f, indent=2)
 
     return mean_std
 

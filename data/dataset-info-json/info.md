@@ -3,7 +3,7 @@
 - `mean_std_values.json`: first values, calculated from sequenced samples - unwindowed, gravity not removed, unfiltered.
 - `mean_std_values_2.json`: second values, calculated from windowed sequenced samples, gravity removed, filtered.
 - `mean_std_values_3.json`: third values, calculated from sequenced samples - unwindowed, gravity removed, filtered.
-
+- `mean_std_values_4.json`: fourth values, calculated from sequenced samples - unwindowed, gravity correctly removed, filtered.
 # Signal Start Times
 
 The starting timestamp for each session's data, along with their duration in windows.

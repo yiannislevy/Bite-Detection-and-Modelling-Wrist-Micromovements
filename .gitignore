@@ -24,11 +24,11 @@ data/predictions
 data/temp_files
 
 /notebooks/testing
-/notebooks/try_raw_pipeline.ipynb
+/notebooks/archive/try_raw_pipeline.ipynb
 /notebooks/playground.ipynb
 /notebooks/mando_pred_viz.ipynb
 /notebooks/modelling.ipynb
-/notebooks/WeightPrediction.ipynb
+/notebooks/archive/WeightPrediction.ipynb
 
 models/
 

@@ -100,7 +100,7 @@ def load_data_subjects(test_subject, subject_to_indices):
         if subject != test_subject:
             # and subject != validation_subject:
             subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/MajorityLabel/subjects/subject_{subject}/data.pkl")
-            # subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/std_1/subject_{subject}/data.pkl") #TODO re-eval
+            # subject_data, subject_labels = load_subject_data(f"../data/ProcessedSubjects/std_1/subject_{subject}/data.pkl")
             training_data.append(subject_data)
             training_labels.append(subject_labels)
 

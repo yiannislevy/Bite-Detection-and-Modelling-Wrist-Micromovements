@@ -29,8 +29,6 @@ import keras
 from keras.optimizers.legacy import Adam as LegacyAdam
 from src.utils.data_io import save_data, load_data
 from src.utils.prediction_utilities import append_timestamps_to_predictions, split_predictions_to_sessions
-# TODO FIX PATH ISSUE!
-# TODO STREAMLINE EVERYTHING
 # Paths
 path_to_models = "../models/full_loso/majority_label/processed/std_3/"
 path_to_save = "../data/cnn_predictions/complete/timestamped"
@@ -119,7 +117,7 @@ def save_predictions_sessioned_single_model(path_to_model, path_to_data, path_to
     model = keras.models.load_model(path_to_model, compile=False)
     model.compile(optimizer=LegacyAdam(learning_rate=1e-3), loss='categorical_crossentropy', metrics=["accuracy"])
 
-    for session_id in range(1,22):
+    for session_id in range(1, 22):
         session_path = f"{path_to_data}/session_{session_id}.pkl"
         test_data = pd.read_pickle(session_path)
         test_data = test_data[:, :, 1:]

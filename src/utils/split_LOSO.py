@@ -16,7 +16,7 @@ for i, subject_id in enumerate(subject_ids):
 
 for subject in set(subject_ids):
     # Define directory name
-    directory = f"../../data/LOSO/all_but_{subject}" # TODO: modify path
+    directory = f"../../data/LOSO/all_but_{subject}"
     os.makedirs(directory, exist_ok=True)
 
     # Get training and testing indices

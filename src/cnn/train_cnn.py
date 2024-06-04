@@ -16,7 +16,6 @@ import pickle
 import json
 
 
-# TODO: Change for session version
 def load_data(test_subject, subjects_sessions):
     training_data, testing_data, validation_data = [], [], []
     training_labels, testing_labels, validation_labels = [], [], []
@@ -49,7 +48,7 @@ def load_data(test_subject, subjects_sessions):
 
     return training_data, training_labels, testing_data, testing_labels
 
-# TODO: Change to load_session
+
 def load_subject_data(path):
     data = pd.read_pickle(path)
     signal_data = np.array([item[0] for item in data])
